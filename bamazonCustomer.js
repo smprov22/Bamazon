@@ -1,64 +1,90 @@
-var mysql = require("mysql");
 var inquirer = require("inquirer");
+var mysql = require("mysql");
+var Table = require("cli-table");
 
 // create the connection information for the sql database
 var connection = mysql.createConnection({
   host: "localhost",
-
-  // Your port; if not 3306
   port: 3306,
-
-  // Your username
   user: "root",
-
-  // Your password
   password: "root",
   database: "bamazon_db"
 });
 
-// connect to the mysql server and sql database
 function displayProducts() {
-  connection.query("SELECT id, product_name, price FROM products", function(err, results) {
-      if (err) throw err;
-      // once you have the items, prompt the user for which they'd like to bid on
+  connection.query("SELECT * FROM products", function(err, results) {
+      //Makes table
+      var table = new Table({
+        head: ["ID", "Product Name", "Price"]
+      })
+      
+      console.log("Items for sale:")
+      console.log("<-------------------------------------------------------->")
+      for (var i = 0; i < results.length; i++) {
+        table.push([results[i].id, results[i].product_name, results[i].price]);
+      }
+      console.log(table.toString());
+      
       inquirer
         .prompt([
           {
-            name: "choice",
-            type: "rawlist",
-            choices: function() {
-              var choiceArray = [];
-              for (var i = 0; i < results.length; i++) {
-                choiceArray.push(results[i].product_name);
+            name: "itemID",
+            type: "input",
+            message: "Please enter the ID of the product you would like to buy.",
+            validate: function(value) {
+              if (isNaN(value) == false) {
+                return true;
+              } else {
+                return false;
               }
-              return choiceArray;
-            },
-            message: "Please enter the ID of the product you would like to buy?"
+            }
           },
           {
             name: "amount",
             type: "input",
             message: "How many would you like to buy?",
+            validate: function(value) {
+              if (isNaN(value) == false) {
+                return true;
+              } else {
+                return false;
+              }
+            }
           }
         ])
-        // .then(function(answer) {
-        //   // when finished prompting, insert a new item into the db with that info
-        //   connection.query(
-        //     "INSERT INTO auctions SET ?",
-        //     {
-        //       item_name: answer.item,
-        //       category: answer.category,
-        //       starting_bid: answer.startingBid || 0,
-        //       highest_bid: answer.startingBid || 0
-        //     },
-        //     function(err) {
-        //       if (err) throw err;
-        //       console.log("Your auction was created successfully!");
-        //       // re-prompt the user for if they want to bid or post
-        //       start();
-        //     }
-        //   );
-        // });
+        .then(function(answer) {
+          // Get the info of the chosen item
+          var chosenID = answer.itemID -1;
+          var chosenQuantity = answer.amount;
+          var price = results[chosenID].price * chosenQuantity
+
+          if (parseInt(chosenQuantity) <= results[chosenID].stock_quantity) {
+          console.log("Your total for " + answer.amount + " - " + results[chosenID].product_name + " is: $" + price.toFixed(2));
+            connection.query(
+              "UPDATE products SET ? WHERE ?",
+              [
+                {
+                  stock_quantity: results[chosenID].stock_quantity - chosenQuantity
+                },
+                {
+                  id: results[chosenID].id
+                }
+              ],
+              function(error) {
+                if (error) throw err;
+                console.log("Congrats, your item was successfully purchased!");
+                console.log("<-------------------------------------------------------->")
+                displayProducts();
+              });
+          }
+          else {
+            // bid wasn't high enough, so apologize and start over
+            console.log("Sorry, there aren't enough in stock. Please adjust your order and try again.");
+            console.log("<-------------------------------------------------------->")
+            displayProducts();
+          }  
+          
+        });
       })
 }
 displayProducts()
