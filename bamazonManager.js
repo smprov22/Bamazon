@@ -47,12 +47,13 @@ function viewProducts() {
           table.push([results[i].id, results[i].product_name, results[i].department_name, results[i].price, results[i].stock_quantity]);
         }
         console.log(table.toString());
+        nextAction();
     })
-    nextAction();
+    
 }
 
 function lowInventory() {
-    connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, results) {
+    connection.query("SELECT * FROM products WHERE stock_quantity < 20", function(err, results) {
         //Makes table
         var table = new Table({
           head: ["ID", "Product Name", "Department", "Price", "Quantity"]
@@ -64,12 +65,54 @@ function lowInventory() {
           table.push([results[i].id, results[i].product_name, results[i].department_name, results[i].price, results[i].stock_quantity]);
         }
         console.log(table.toString());
+        nextAction();
     })
-    nextAction();
 }
 
 function addInventory() {
-    console.log("add to inventory");
+    connection.query("SELECT * FROM products", function(err, results) {
+        //Makes table
+        var table = new Table({
+          head: ["ID", "Product Name", "Department", "Price", "Quantity"]
+        })
+        
+        console.log("Items for sale:")
+        console.log("<-------------------------------------------------------->")
+        for (var i = 0; i < results.length; i++) {
+          table.push([results[i].id, results[i].product_name, results[i].department_name, results[i].price, results[i].stock_quantity]);
+        }
+        console.log(table.toString());
+    
+        inquirer
+            .prompt([
+                {
+                name: "id",
+                type: "input",
+                message: "Select the ID of the product you'd like to add inventory to.",
+                },
+                {
+                name: "quantity",
+                type: "input",
+                message: "How much stock would you like to add?",
+                }
+            ])
+            .then(function(answer) {
+                var chosenID = answer.id - 1;
+                var quantity = parseInt(answer.quantity)
+                connection.query(
+                    "UPDATE products SET ? WHERE ?",
+                    [
+                    {
+                        stock_quantity: results[chosenID].stock_quantity + quantity
+                    },
+                    {
+                        id: answer.id
+                    }
+                    ],
+                )
+                nextAction();
+            })
+    })
 }
 
 function addProduct() {
@@ -106,9 +149,9 @@ function addProduct() {
           },
         function(err, results) {
             console.log("Product inserted!\n");
+            nextAction2();
         })
     })
-    nextAction2();
 }
 
 function nextAction() {
