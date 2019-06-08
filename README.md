@@ -19,7 +19,7 @@ Here is another example of a successful sale.
 
 This is what happens when a sale is unsuccessful due to lack of stock in the selected product.
 
-![BamazonCustomer-saleunsuccessful](/screenshots/bamazonCustomer-notenoughproduct.PNG)
+![BamazonCustomer-sale-unsuccessful](/screenshots/bamazonCustomer-notenoughproduct.PNG)
 
 The next set of screenshots shows the manager pathway.  This first one shows the initial menu that pops up when the manager app is run.
 
@@ -29,7 +29,7 @@ This is what is shown when the manager selects the view products option.  I incl
 
 ![BamazonManager-menu](/screenshots/bamazonManager-viewproducts-secondmenu.PNG)
 
-This next screenshot is what is shown when the manager selects the low inventory option.  Again, I included a menu for further action once the table is displayed.
+This next screenshot is what is shown when the manager selects the low inventory option.  This table displays all products with an inventory less than 20.  Again, I included a menu for further action once the table is displayed.
 
 ![BamazonManager-menu](/screenshots/bamazonManager-lowinventory.PNG)
 
