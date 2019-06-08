@@ -19,7 +19,7 @@ Here is another example of a successful sale.
 
 This is what happens when a sale is unsuccessful due to lack of stock in the selected product.
 
-![BamazonCustomer-sale-unsuccessful](/screenshots/bamazonCustomer-notenoughproduct.PNG)
+![BamazonCustomer-unsuccessful](/screenshots/bamazonCustomer-notenoughproduct.PNG)
 
 The next set of screenshots shows the manager pathway.  This first one shows the initial menu that pops up when the manager app is run.
 
