@@ -17,7 +17,7 @@ Here is another example of a successful sale.
 
 ![BamazonCustomer-salesuccessful2](/screenshots/bamazonCustomer-secondproduct.PNG)
 
-This is what happens when a sale is unsuccessful due to lack of stock in the selected product.
+This is what happens when a sale is unsuccessful due to lack of stock in the selected product.  The sale does not go through and the table is re-displayed so the customer can adjust their order.
 
 ![BamazonCustomer-unsuccessful](/screenshots/bamazonCustomer-notenoughproduct.PNG)
 
