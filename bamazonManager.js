@@ -99,6 +99,7 @@ function addInventory() {
             .then(function(answer) {
                 var chosenID = answer.id - 1;
                 var quantity = parseInt(answer.quantity)
+                console.log("Successfully added to inventory");
                 connection.query(
                     "UPDATE products SET ? WHERE ?",
                     [
@@ -109,6 +110,7 @@ function addInventory() {
                         id: answer.id
                     }
                     ],
+                    
                 )
                 nextAction();
             })
